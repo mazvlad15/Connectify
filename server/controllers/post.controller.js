@@ -35,14 +35,63 @@ export const addPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find()
+      .populate("creatorId", "fullName profilePicture")
+      .exec();
 
-    if (!posts) {
+    if (!posts || posts.length === 0) {
       return res.status(400).json({ error: "No posts available" });
     }
 
     res.status(200).json({ posts });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error get all posts" });
+  }
+};
+
+export const like = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const postId = req.body.postId;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ error: "Post with this id doesn't exist" });
+    }
+
+    if (post.likes.includes(userId)) {
+      return res.status(400).json({ error: "You already liked this post" });
+    }
+
+    post.likes.push(userId); 
+    await post.save();
+
+    res.status(200).json({ message: "Liked post successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error like" });
+  }
+};
+
+export const unlike = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const postId = req.body.postId;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ error: "Post with this id doesn't exist" });
+    }
+
+    if (!post.likes.includes(userId)) {
+      return res.status(400).json({ error: "You have not liked this post" });
+    }
+
+    post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+
+    await post.save();
+
+    res.status(200).json({ message: "Unliked post successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error unlike" });
   }
 };
