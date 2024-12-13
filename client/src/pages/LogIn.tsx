@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
-import useLogIn from "../hooks/useLogIn";
+import useLogIn from "../hooks/auth/useLogIn";
 import { Link } from "react-router-dom";
 
 const LogInSchema: ZodType<IUser> = z.object({

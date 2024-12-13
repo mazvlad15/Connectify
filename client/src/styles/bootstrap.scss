@@ -1,0 +1,17 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$primary: #3B1E54;
+$secondary: #9B7EBD;
+$purple: #D4BEE4;
+$background: #EEEEEE;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "purple": $purple,
+  "background": $background
+);
+
+
+@import "bootstrap/scss/bootstrap";

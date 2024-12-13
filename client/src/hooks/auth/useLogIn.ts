@@ -1,6 +1,6 @@
 import { useState } from "react";
-import authContext from "../context/authContext";
-import { IUser } from "../interface";
+import authContext from "../../context/authContext";
+import { IUser } from "../../interface";
 import axios, { AxiosResponse } from "axios";
 
 const useLogIn = () => {

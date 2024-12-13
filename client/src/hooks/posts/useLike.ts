@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useGetAllPosts from "./useGetAllPosts";
 import axios, { AxiosResponse } from "axios";
-import authContext from "../context/authContext";
+import authContext from "../../context/authContext";
 
 interface likeReturn {
   setLikeFunction: (postId: string) => void;

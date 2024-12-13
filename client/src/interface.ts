@@ -17,3 +17,13 @@ export interface IPost {
   comments: [string];
   createdAt: string;
 }
+
+export interface IComment{
+  _id?: string;
+  comment: string;
+  creatorId: IUser;
+  postId: string;
+  createdAt: string;
+  updatedAt?: string;
+  __v?: number;
+}

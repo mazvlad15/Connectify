@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { IoMdClose } from "react-icons/io";
 import { motion } from "framer-motion";
-import useLogOut from "../../hooks/useLogOut";
+import useLogOut from "../../hooks/auth/useLogOut";
 import { Link } from "react-router-dom";
 
 const navbarVariants = {
@@ -122,13 +122,13 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="hover:tw-bg-secondary tw-rounded-md  ">
-            <a
-              href="#"
+            <Link
+              to={"/explore"}
               className="d-flex align-items-center gap-2 nav-link text-dark"
             >
               <GoSearch size={"20px"} />
               Explore
-            </a>
+            </Link>
           </li>
           <li className="hover:tw-bg-secondary tw-rounded-md  ">
             <Link

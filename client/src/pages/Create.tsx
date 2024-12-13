@@ -3,13 +3,12 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
-import useAddPost from "../hooks/useAddPost";
+import useAddPost from "../hooks/posts/useAddPost";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-// Schema fără validarea imaginii
 const addSchema = z.object({
   title: z.string().min(1, "Title must have at least 1 character"),
   description: z.string().min(1, "Description must have at least 1 character"),

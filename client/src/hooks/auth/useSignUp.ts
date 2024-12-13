@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { IUser } from "../interface";
+import { IUser } from "../../interface";
 import axios, { AxiosResponse } from "axios";
-import authContext from "../context/authContext";
+import authContext from "../../context/authContext";
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

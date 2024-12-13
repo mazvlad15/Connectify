@@ -5,7 +5,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { IPost } from "../../interface";
 import { formatDistanceToNow } from "date-fns";
-import useLike from "../../hooks/useLike";
+import useLike from "../../hooks/posts/useLike";
 import authContext from "../../context/authContext";
 import { useState } from "react";
 import Comments from "./Comments";
@@ -86,7 +86,7 @@ const Post = ({ post }: PostProps) => {
         </div>
       </Card.Footer>
     </Card>
-    <Comments showComments={showComments} handleClose={handleClose}/>
+    <Comments postId={post._id || ""} showComments={showComments} handleClose={handleClose}/>
     </div>
   );
 };

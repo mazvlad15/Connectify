@@ -1,6 +1,7 @@
 import Navbar from "./components/Menu/Navbar";
 import authContext from "./context/authContext";
 import Create from "./pages/Create";
+import Explore from "./pages/Explore";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
@@ -22,6 +23,10 @@ const App = () => {
           <Route
             path="/"
             element={!authState ? <Navigate to="/login" /> : <Home />}
+          />
+          <Route
+            path="/explore"
+            element={!authState ? <Navigate to="/login" /> : <Explore />}
           />
           <Route
             path="/create"

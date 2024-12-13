@@ -5,7 +5,7 @@ import { z, ZodType } from "zod";
 import { IUser } from "../interface";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useSignUp from "../hooks/useSignUp";
+import useSignUp from "../hooks/auth/useSignUp";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";

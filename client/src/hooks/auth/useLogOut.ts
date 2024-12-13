@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { useState } from "react"
-import authContext from "../context/authContext";
+import authContext from "../../context/authContext";
 
 
 

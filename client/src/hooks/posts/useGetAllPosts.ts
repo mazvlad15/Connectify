@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { IPost } from "../interface";
+import { IPost } from "../../interface";
 import axios from "axios";
 
 interface getAllPostsReturn {
-  posts: [IPost] | [];
+  posts: IPost[];
   isLoading: boolean;
   error: string | null;
 }
@@ -11,7 +11,7 @@ interface getAllPostsReturn {
 const useGetAllPosts = (): getAllPostsReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [posts, setPosts] = useState<[IPost] | []>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
     const getAllPosts = async () => {
