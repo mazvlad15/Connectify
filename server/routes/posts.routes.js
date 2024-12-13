@@ -1,6 +1,6 @@
 import express from "express";
 import protectedRoute from "../middlewares/protectedRoute.js"
-import { addPost, getAllPosts, like, unlike, writeComment, getAllComments } from "../controllers/post.controller.js";
+import { addPost, getAllPosts, like, unlike, writeComment, getAllComments, deletePost } from "../controllers/post.controller.js";
 import upload from "../middlewares/multer.js";
 
 const router = express.Router()
@@ -11,5 +11,6 @@ router.post("/like", protectedRoute, like);
 router.post("/unlike", protectedRoute, unlike);
 router.post("/comments/add", protectedRoute, writeComment);
 router.get("/comments/all", protectedRoute, getAllComments)
+router.delete("/delete", protectedRoute, deletePost);
 
 export default router;

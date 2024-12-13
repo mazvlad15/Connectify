@@ -97,6 +97,32 @@ export const unlike = async (req, res) => {
   }
 };
 
+export const deletePost = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const postId = req.body.postId;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ error: "No post with this id" });
+    }
+
+    if (userId.toString() !== post.creatorId.toString()) {
+      return res
+        .status(400)
+        .json({ error: "Only the creator can delete the post" });
+    }
+
+    await Post.findByIdAndDelete(postId);
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ error: "Internal Server Error delete post" });
+  }
+};
+
+
 export const writeComment = async (req, res) => {
   try {
     const creatorId = req.user._id;
@@ -115,7 +141,7 @@ export const writeComment = async (req, res) => {
         post.comments.push(newComment);
         await post.save();
 
-        await newComment.populate('creatorId', 'fullName profilePicture');
+        await newComment.populate("creatorId", "fullName profilePicture");
 
         return res.status(200).json(newComment);
       } else {
@@ -129,7 +155,6 @@ export const writeComment = async (req, res) => {
   }
 };
 
-
 export const getAllComments = async (req, res) => {
   try {
     const postId = req.query.postId;
@@ -138,11 +163,11 @@ export const getAllComments = async (req, res) => {
       .populate({
         path: "comments",
         populate: {
-          path: "creatorId", 
-          select: "fullName profilePicture", 
+          path: "creatorId",
+          select: "fullName profilePicture",
         },
       })
-      .select("comments"); 
+      .select("comments");
 
     if (comments) {
       return res.status(200).json(comments);
@@ -151,6 +176,8 @@ export const getAllComments = async (req, res) => {
     }
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ error: "Internal server error while fetching comments" });
+    res
+      .status(500)
+      .json({ error: "Internal server error while fetching comments" });
   }
 };

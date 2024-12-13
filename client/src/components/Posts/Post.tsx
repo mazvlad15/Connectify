@@ -7,8 +7,10 @@ import { IPost } from "../../interface";
 import { formatDistanceToNow } from "date-fns";
 import useLike from "../../hooks/posts/useLike";
 import authContext from "../../context/authContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Comments from "./Comments";
+import useDeletePost from "../../hooks/posts/useDeletePost";
+import toast, { Toaster } from "react-hot-toast";
 
 interface PostProps {
   post: IPost;
@@ -37,8 +39,33 @@ const Post = ({ post }: PostProps) => {
     }
   };
 
+  const {deletePost, error, setError, successMessage} = useDeletePost();
+
+
+  useEffect(() => {
+    if(error){
+      toast.error(error)
+    }else if(successMessage){
+      toast.success(successMessage)
+    }
+  }, [error, successMessage])
+
+  const deletePostBtn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await deletePost(post._id || "");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+  }
+
   return (
     <div>
+      <Toaster />
     <Card>
       <Card.Header className="d-flex  tw-items-center px-1">
         <img
@@ -49,7 +76,7 @@ const Post = ({ post }: PostProps) => {
         <div className="tw-font-semibold tw-cursor-pointer">
           {post.creatorId.fullName}
         </div>
-        {isCreator && <CloseButton className="ms-auto" />}
+        {isCreator && <CloseButton onClick={deletePostBtn} className="ms-auto" />}
       </Card.Header>
       <Card.Img className="p-1" src={post.image} />
       <Card.Body>
