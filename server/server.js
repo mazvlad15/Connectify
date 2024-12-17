@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import postsRouter from "./routes/posts.routes.js";
+import messagesRouter from "./routes/messages.routes.js";
 
 import cors from "cors";
 import dotenv from "dotenv";
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/messages", messagesRouter);
 
 app.listen(PORT, () => {
   connectToMongoDb();

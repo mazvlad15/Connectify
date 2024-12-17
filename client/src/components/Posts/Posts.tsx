@@ -34,7 +34,7 @@ const Posts = ({ searchTerm = "" }: PostsProps) => {
       {filteredPosts.length > 0 && !isLoading ? (
         <Row xs={1} md={1} lg={3} className="g-2 d-flex">
           {filteredPosts.map((post) => (
-            <Col className="d-flex mb-5" key={post._id}>
+            <Col className="d-flex mb-5 col-sm-12" key={post._id}>
               <Post post={post} />
             </Col>
           ))}

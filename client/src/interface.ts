@@ -5,6 +5,7 @@ export interface IUser {
   password?: string;
   confirmPassword?: string;
   profilePicture?: string;
+  createdAt?: string;
 }
 
 export interface IPost {
@@ -26,4 +27,18 @@ export interface IComment{
   createdAt: string;
   updatedAt?: string;
   __v?: number;
+}
+
+export interface IMessage{
+  _id?: string;
+  senderId?: string;
+  receiverId?: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface IChat{
+  _id?: string;
+  participant: IUser;
+  lastMessage: IMessage;
 }

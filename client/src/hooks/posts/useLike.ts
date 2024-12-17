@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import authContext from "../../context/authContext";
 
 interface likeReturn {
-  setLikeFunction: (postId: string) => void;
+  setLikeFunction: (postId: string) => Promise<void>;
   like: boolean;
   likes: number;
 }

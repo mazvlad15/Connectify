@@ -11,6 +11,8 @@ import { IoMdClose } from "react-icons/io";
 import { motion } from "framer-motion";
 import useLogOut from "../../hooks/auth/useLogOut";
 import { Link } from "react-router-dom";
+import authContext from "../../context/authContext";
+import userContext from "../../context/userContext";
 
 const navbarVariants = {
   hidden: { x: "-100%", opacity: 0 },
@@ -23,6 +25,7 @@ const overlayVariants = {
 };
 
 const Navbar = () => {
+  const profilePicture = userContext((state) => state.profilePicture);
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 992
@@ -57,6 +60,8 @@ const Navbar = () => {
       console.log(error);
     }
   };
+
+  const authState = authContext((state) => state.authState);
 
   return (
     <div>
@@ -140,33 +145,31 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="hover:tw-bg-secondary tw-rounded-md  ">
-            <a
-              href="#"
+            <Link
+              to={"/messages"}
               className="d-flex align-items-center gap-2 nav-link text-dark"
             >
               <FaRegEnvelope size={"20px"} />
               Messages
-            </a>
+            </Link>
           </li>
           <li className="hover:tw-bg-secondary tw-rounded-md  ">
-            <a
-              href="#"
+            <Link
+              to={"/profile"}
               className="d-flex align-items-center gap-2 nav-link text-dark"
             >
               <CgProfile size={"20px"} />
               Profile
-            </a>
+            </Link>
           </li>
         </ul>
         <div className="d-flex align-items-center">
           <img
-            src="https://github.com/mdo.png"
+            src={profilePicture || ""}
             alt=""
-            width="32"
-            height="32"
-            className="rounded-circle me-2 tw-cursor-pointer"
+            className="rounded-circle me-2 tw-cursor-pointer tw-size-9"
           />
-          <strong className="tw-text-primary tw-cursor-pointer">mdo</strong>
+          <strong className="tw-text-primary tw-cursor-pointer">{authState?.fullName}</strong>
           {isLoadingLogOut ? (
             <span className="loading loading-spinner"></span>
           ) : (

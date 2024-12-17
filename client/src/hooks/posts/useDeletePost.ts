@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import useGetAllPosts from "./useGetAllPosts";
 
 interface DeletePostReturn {
   deletePost: (postId: string) => Promise<void>;

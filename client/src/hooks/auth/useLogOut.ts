@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { useState } from "react"
 import authContext from "../../context/authContext";
+import userContext from "../../context/userContext";
 
 
 
@@ -8,6 +9,7 @@ const useLogOut = () => {
     
     const [isLoadingLogOut, setIsLoadingLogOut] = useState<boolean>(false);
     const setAuthState = authContext((state) => state.setAuthState);
+    const setProfilePicture = userContext((state) => state.setProfilePicture);
 
     const logOut = async () => {
         setIsLoadingLogOut(true);
@@ -21,7 +23,6 @@ const useLogOut = () => {
 
             localStorage.removeItem("user");
             setAuthState(null);
-
             return response.data;
         } catch (error) {
             console.log(error);

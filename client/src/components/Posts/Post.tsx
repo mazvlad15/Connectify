@@ -78,7 +78,7 @@ const Post = ({ post }: PostProps) => {
         </div>
         {isCreator && <CloseButton onClick={deletePostBtn} className="ms-auto" />}
       </Card.Header>
-      <Card.Img className="p-1" src={post.image} />
+      <Card.Img className="p-1 " src={post.image} />
       <Card.Body>
         <Card.Title>{post.title}</Card.Title>
         <Card.Text>{post.description}</Card.Text>

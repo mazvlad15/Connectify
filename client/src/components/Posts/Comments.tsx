@@ -4,6 +4,7 @@ import WriteComment from "./WriteComment";
 import useGetComments from "../../hooks/posts/useGetComments";
 import toast, { Toaster } from "react-hot-toast";
 import CommentSkeleton from "../../skeletons/CommentSkeleton";
+import userContext from "../../context/userContext";
 
 type Props = {
   postId: string;
@@ -13,6 +14,7 @@ type Props = {
 
 const Comments = ({ showComments, handleClose, postId }: Props) => {
   const { comments, isLoading, error } = useGetComments(postId);
+  const profilePicture = userContext((state) => state.profilePicture);
 
   if (error) {
     toast.error(error);
@@ -45,8 +47,8 @@ const Comments = ({ showComments, handleClose, postId }: Props) => {
             <div className="tw-avatar me-auto">
               <div className="tw-w-10 tw-rounded-full">
                 <img
-                  alt="Tailwind CSS chat bubble component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="profile picture"
+                  src={profilePicture || ""}
                 />
               </div>
             </div>

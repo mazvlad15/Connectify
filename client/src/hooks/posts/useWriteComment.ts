@@ -4,7 +4,7 @@ import useGetComments from "./useGetComments";
 import { IComment } from "../../interface";
 
 interface WriteCommentReturn {
-  writeComment: (comment: string) => void;
+  writeComment: (comment: string) => Promise<void>;
   error: string | null;
   isLoading: boolean;
   setError: (error: string | null) => void;

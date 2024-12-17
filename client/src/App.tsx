@@ -1,9 +1,10 @@
 import Navbar from "./components/Menu/Navbar";
 import authContext from "./context/authContext";
-import Create from "./pages/Create";
-import Explore from "./pages/Explore";
+import Create from "./components/Menu/Pages/Create";
+import Explore from "./components/Menu/Pages/Explore";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
+import Profile from "./components/Menu/Pages/Profile";
 import SignUp from "./pages/SignUp";
 import {
   BrowserRouter as Router,
@@ -11,6 +12,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import Messages from "./components/Menu/Pages/Messages";
+import Chat from "./components/Messages/Chat";
 
 const App = () => {
   const authState = authContext((state) => state.authState);
@@ -28,9 +31,18 @@ const App = () => {
             path="/explore"
             element={!authState ? <Navigate to="/login" /> : <Explore />}
           />
+          <Route path="/messages/:chatId" element={!authState ? <Navigate to="/login" /> : <Chat />} />
+          <Route
+            path="/profile"
+            element={!authState ? <Navigate to="/login" /> : <Profile />}
+          />
           <Route
             path="/create"
             element={!authState ? <Navigate to="/login" /> : <Create />}
+          />
+          <Route
+            path="/messages"
+            element={!authState ? <Navigate to="/login" /> : <Messages />}
           />
           <Route
             path="/signup"

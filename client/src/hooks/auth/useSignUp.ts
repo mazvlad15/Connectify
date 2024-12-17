@@ -2,11 +2,13 @@ import { useState } from "react";
 import { IUser } from "../../interface";
 import axios, { AxiosResponse } from "axios";
 import authContext from "../../context/authContext";
+import userContext from "../../context/userContext";
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorSignUp, setError] = useState<string>("");
   const setAuthState = authContext((state) => state.setAuthState);
+  const setProfilePicture = userContext((state) => state.setProfilePicture);
 
   const signUp = async (userData: IUser) => {
     setIsLoading(true);
@@ -17,6 +19,12 @@ const useSignUp = () => {
 
       localStorage.setItem("user", JSON.stringify(response.data));
       setAuthState(response.data);
+
+      const user = localStorage.getItem("user") || "{}";
+      const userParse = JSON.parse(user);
+      const userProfilePicture = userParse.profilePicture;
+
+      setProfilePicture(userProfilePicture || "");
 
       return response.data;
     } catch (error: unknown) {
