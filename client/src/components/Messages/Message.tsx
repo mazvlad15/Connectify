@@ -1,4 +1,3 @@
-import React from "react";
 import { IMessage } from "../../interface";
 import authContext from "../../context/authContext";
 import chatContext from "../../context/chatContext";

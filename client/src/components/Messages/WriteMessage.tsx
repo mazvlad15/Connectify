@@ -4,27 +4,23 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import { IoMdSend } from "react-icons/io";
-import { useParams } from "react-router-dom";
 import chatContext from "../../context/chatContext";
 import useSendMessage from "../../hooks/messages/useSendMessage";
 import { BiBlock } from "react-icons/bi";
 
 const WriteMessage = () => {
-  const { chatId } = useParams();
   const participant = chatContext((state) => state.participant);
 
   const [message, setMessage] = useState<string>("");
   const isRequired: boolean = message !== "";
 
-  const { error, setError, sendMessage } = useSendMessage(
-    chatId || ""
-  );
+  const { error, setError, sendMessage } = useSendMessage();
 
   const sendMessageForm = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        await sendMessage(message, participant?._id || "");
-        setMessage("");
+      await sendMessage(message, participant?._id || "");
+      setMessage("");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -59,7 +55,7 @@ const WriteMessage = () => {
             />
           </InputGroup.Text>
           <InputGroup.Text className="bg-background">
-          <button
+            <button
               type="submit"
               disabled={!isRequired}
               className={`tw-text-secondary tw-cursor-pointer hover:-tw-rotate-12 ${

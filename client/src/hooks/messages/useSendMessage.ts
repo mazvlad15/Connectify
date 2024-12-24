@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import useGetAllMessages from "./useGetAllMessages";
-import { IMessage } from "../../interface";
+
 
 interface SendMessageReturn{
     sendMessage: (message: string, participantId: string) => Promise<void>;
@@ -10,7 +9,7 @@ interface SendMessageReturn{
     setError: (error: string | null) => void; 
 }
 
-const useSendMessage = (chatId: string):SendMessageReturn => {
+const useSendMessage = ():SendMessageReturn => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 

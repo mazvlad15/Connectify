@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Posts from "../../Posts/Posts";
-import { GoSearch } from "react-icons/go";
 import SearchBar from "../../Search/SearchBar";
 
 const Explore = () => {

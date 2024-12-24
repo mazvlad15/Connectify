@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { IUser } from "../../interface";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import useGetChatId from "../../hooks/messages/useGetChatId";
 import toast, { Toaster } from "react-hot-toast";
 import chatContext from "../../context/chatContext";
