@@ -1,6 +1,7 @@
 import cloudinary from "../db/cloudinary.js";
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
+import { io } from "../socket/socket.js";
 
 export const getAllUsers = async (req, res) => {
   try {

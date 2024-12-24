@@ -1,18 +1,22 @@
 import Post from "../models/post.model.js";
 import cloudinary from "../db/cloudinary.js";
 import Comment from "../models/comment.model.js";
+import { io } from "../socket/socket.js";
 
 export const addPost = async (req, res) => {
   try {
     const { title, description } = req.body;
     const creatorId = req.user._id;
+
     const cloud = await cloudinary.uploader
       .upload(req.file.path)
       .catch((err) =>
         res.status(400).json({ error: "Error uploading image " + err })
       );
+
     if (cloud) {
       const image = cloud.secure_url;
+
       const newPost = new Post({
         title,
         image,
@@ -20,17 +24,21 @@ export const addPost = async (req, res) => {
         creatorId,
       });
 
-      if (newPost) {
-        await newPost.save();
-        res.status(201).json({ newPost });
-      } else {
-        res.status(400).json({ error: "Invalid post data" });
-      }
+      await newPost.save();
+
+      const populatedPost = await newPost.populate(
+        "creatorId",
+        "fullName profilePicture"
+      );
+
+      res.status(201).json({ newPost: populatedPost });
+
+      io.emit("newPost", populatedPost);
     } else {
-      res.status(400).json({ error: "Error connect to cloud" });
+      res.status(400).json({ error: "Error connecting to cloud" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error add post" });
+    res.status(500).json({ error: "Internal Server Error adding post" });
   }
 };
 
@@ -68,6 +76,8 @@ export const like = async (req, res) => {
     await post.save();
 
     res.status(200).json({ message: "Liked post successfully" });
+
+    io.emit("likePost");
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error like" });
   }
@@ -92,6 +102,8 @@ export const unlike = async (req, res) => {
     await post.save();
 
     res.status(200).json({ message: "Unliked post successfully" });
+
+    io.emit("unlikePost");
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error unlike" });
   }
@@ -116,12 +128,13 @@ export const deletePost = async (req, res) => {
     await Post.findByIdAndDelete(postId);
 
     res.status(200).json({ message: "Post deleted successfully" });
+
+    io.emit("deletePost", { postId });
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ error: "Internal Server Error delete post" });
   }
 };
-
 
 export const writeComment = async (req, res) => {
   try {
@@ -142,6 +155,8 @@ export const writeComment = async (req, res) => {
         await post.save();
 
         await newComment.populate("creatorId", "fullName profilePicture");
+
+        io.emit("newComment", newComment);
 
         return res.status(200).json(newComment);
       } else {
@@ -179,5 +194,40 @@ export const getAllComments = async (req, res) => {
     res
       .status(500)
       .json({ error: "Internal server error while fetching comments" });
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const commentId = req.body.commentId;
+
+    const comment = await Comment.findById(commentId);
+
+    console.log(comment.creatorId);
+    console.log(userId);
+
+    if (!comment) {
+      return res.status(400).json({ error: "No comment finding" });
+    }
+
+    if (userId.toString() !== comment.creatorId.toString()) {
+      return res
+        .status(400)
+        .json({ error: "Only creator can delete the comment" });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+
+    await Post.updateMany(
+      { comments: commentId },
+      { $pull: { comments: commentId } }
+    );
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+
+    io.emit("deleteComment", {commentId});
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error delete comment" });
   }
 };

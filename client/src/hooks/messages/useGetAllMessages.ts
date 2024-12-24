@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { IMessage } from "../../interface";
 import axios from "axios";
+import { socketContext } from "../../context/socketContext";
 
 interface GetAllMessagesReturn{
     messages: IMessage[];
@@ -13,6 +14,7 @@ const useGetAllMessages = (chatId: string):GetAllMessagesReturn => {
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const socket = socketContext((state) => state.socket);
 
     useEffect(() => {
         const getAllMessages = async () => {
@@ -34,9 +36,19 @@ const useGetAllMessages = (chatId: string):GetAllMessagesReturn => {
             }
         }
 
+        const handleNewMessage = (newMessage: IMessage) => {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+
+        socket?.on("newMessage", handleNewMessage);
+
         getAllMessages();
 
-    }, [setMessages])
+        return () => {
+            socket?.off("newMessage", handleNewMessage);
+        }
+
+    }, [setMessages, socket])
 
     return {messages, error, loading, setMessages};
 

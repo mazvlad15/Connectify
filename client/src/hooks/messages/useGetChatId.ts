@@ -15,6 +15,7 @@ const useGetChatId = (): GetChatIdReturn => {
       if (response.data.error) {
         throw new Error(response.data.console.error);
       }
+      console.log(response);
       return response.data._id;
     } catch (error) {
       if (axios.isAxiosError(error)) {

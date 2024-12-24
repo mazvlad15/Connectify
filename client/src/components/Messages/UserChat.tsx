@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { IChat } from "../../interface";
 import { formatDistanceToNow } from "date-fns";
 import chatContext from "../../context/chatContext";
+import { socketContext } from "../../context/socketContext";
 
 type Props = {
   chat: IChat;
@@ -10,9 +11,12 @@ type Props = {
 const UserChat = ({ chat }: Props) => {
   const navigate = useNavigate();
   const setParticipant = chatContext((state) => state.setParticipant);
-  const timeAgo = formatDistanceToNow(new Date(chat.lastMessage.createdAt), {
+  const timeAgo = formatDistanceToNow(new Date(chat.lastMessage?.createdAt) , {
     addSuffix: true,
   });
+
+  const { onlineUsers } = socketContext();
+  const isOnline = onlineUsers.includes(chat.participant._id || "");
 
   const truncateMessage = (message: string, charLimit: number): string => {
     return message.length > charLimit
@@ -25,7 +29,7 @@ const UserChat = ({ chat }: Props) => {
   return (
     <div className="col-lg-12" onClick={() => {navigate("/messages/"+chat._id); setParticipant(chat.participant)}}>
       <div className="d-flex align-items-center gap-2">
-        <div className="tw-avatar tw-online ">
+        <div className={`tw-avatar ${isOnline ? "tw-online" : "tw-offline"} `}>
           <div className="tw-w-14 tw-rounded-full">
             <img alt="avatar" src={chat.participant.profilePicture || ""} />
           </div>

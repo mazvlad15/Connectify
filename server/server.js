@@ -10,7 +10,8 @@ import dotenv from "dotenv";
 import connectToMongoDb from "./db/connectToMongoDB.js";
 dotenv.config({path: "../.env"});
 
-const app = express();
+import {app, server} from "./socket/socket.js";
+
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -22,7 +23,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/messages", messagesRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectToMongoDb();
   console.log(`Server started on port ${PORT}`);
 });

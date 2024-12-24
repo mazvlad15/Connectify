@@ -14,9 +14,25 @@ import {
 } from "react-router-dom";
 import Messages from "./components/Menu/Pages/Messages";
 import Chat from "./components/Messages/Chat";
+import { useEffect } from "react";
+import { socketContext } from "./context/socketContext";
+import useNewMessageNotification from "./hooks/messages/useNewMessageNotification";
 
 const App = () => {
   const authState = authContext((state) => state.authState);
+  const { initializeSocket, disconnectSocket} = socketContext();
+
+  useNewMessageNotification();
+
+  useEffect(() => {
+    if (authState?._id) {
+      initializeSocket(authState._id);
+    } else {
+      disconnectSocket();
+    }
+
+    return () => disconnectSocket();
+  }, [authState, initializeSocket, disconnectSocket]);
 
   return (
     <div className="tw-bg-background tw-min-h-screen tw-h-full d-flex tw-justify-center tw-items-center">

@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import {io, getReceiverSocketId} from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -30,7 +31,18 @@ export const sendMessage = async (req, res) => {
     await Promise.all([conversation.save(), newMessage.save()]);
 
     res.status(200).json(newMessage);
-  } catch (error) {
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+
+    if (receiverSocketId) {
+      io.emit("newMessage", newMessage);
+      io.to(receiverSocketId).emit("newMessageNotification", {
+        senderName: req.user.fullName, 
+        profilePicture: req.user.profilePicture,
+        message: newMessage.message,
+      });
+    }
+      } catch (error) {
     console.log(error.message)
     res.status(500).json({ error: "Internal Server Error send message" });
   }
@@ -55,15 +67,15 @@ export const getAllConversations = async (req, res) => {
   
       const formattedConversations = conversations.map((conversation) => {
         const otherParticipant = conversation.participants.find(
-          (participant) => participant._id.toString() !== userId.toString()
+          (participant) => participant?._id.toString() !== userId.toString()
         );
   
         return {
           _id: conversation._id,
           participant: {
-            _id: otherParticipant._id,
-            fullName: otherParticipant.fullName,
-            profilePicture: otherParticipant.profilePicture,
+            _id: otherParticipant?._id,
+            fullName: otherParticipant?.fullName,
+            profilePicture: otherParticipant?.profilePicture,
           },
           lastMessage: conversation.messages[conversation.messages.length - 1],
         };
@@ -71,6 +83,7 @@ export const getAllConversations = async (req, res) => {
   
       res.status(200).json(formattedConversations);
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: "Internal Server Error get all messages" });
     }
   };
@@ -89,20 +102,28 @@ export const getAllMessages = async (req, res) => {
 
         res.status(200).json(chat);
     } catch (error) {
-        res.status(500).json({error: "Internal Server Error get all messages"})
+        res.status(500).json({error: "Internal Server Error get all messages" })
     }
 }
 
 export const getChatId = async (req, res) => {
   try {
     const userId = req.body.userId;
-    const chatId = await Conversation.findOne({participants: userId}).select("_id");
-    if(!chatId){
-      return res.status(400).json({error: "No existing chat"});
+    const currentUserId = req.user._id;
+
+    let conversation = await Conversation.findOne({
+      participants: { $all: [currentUserId, userId] },
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [currentUserId, userId],
+      });
     }
 
-  res.status(200).json(chatId);    
+    res.status(200).json({ _id: conversation._id });
   } catch (error) {
-    res.status(500).json({error: "Internal Server Error get chat id"});
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error get chat id" });
   }
-}
+};

@@ -6,6 +6,7 @@ import chatContext from "../../context/chatContext";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import WriteMessage from "./WriteMessage";
 import { useEffect, useRef } from "react";
+import { socketContext } from "../../context/socketContext";
 
 const Chat = () => {
   const { chatId } = useParams();
@@ -14,6 +15,8 @@ const Chat = () => {
   const participant = chatContext((state) => state.participant);
 
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const { onlineUsers } = socketContext();
+  const isOnline = onlineUsers.includes(participant?._id || "");
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -24,7 +27,7 @@ const Chat = () => {
   return (
     <div className="col-12 col-lg-10 d-flex ms-auto tw-h-screen flex-column">
       <div className="tw-bg-background tw-shadow-md d-flex tw-items-center gap-3 p-3">
-        <div className="tw-online tw-avatar">
+        <div className={`tw-avatar ${isOnline ? "tw-online" : "tw-offline"}`}>
           <div className="tw-rounded-full tw-size-20">
             <img src={participant?.profilePicture} />
           </div>

@@ -17,7 +17,7 @@ const Header = () => {
           work, connect with other creatives, and get discovered.
         </h2>
         <Link
-          to={"/signup"}
+          to={"/create"}
           className="tw-btn tw-rounded-2xl tw-btn-active tw-bg-primary hover:tw-bg-secondary tw-border-none col-lg-3 text-white tw-text-lg sm:w-full sm:text-center sm:mb-4"
         >
           Get started
