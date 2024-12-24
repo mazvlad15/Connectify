@@ -13,7 +13,7 @@ export const socketContext = create<SocketState>((set, get) => ({
   onlineUsers: [],
 
   initializeSocket: (userId: string) => {
-    const socket = io("http://localhost:5000", {
+    const socket = io("https://connectify-0g6b.onrender.com", {
       query: { userId },
     });
 

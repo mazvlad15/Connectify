@@ -1,3 +1,5 @@
+import daisyui from 'daisyui';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   prefix: "tw-",
@@ -16,6 +18,6 @@ export default {
     },
   },
   plugins: [
-    require('daisyui'),
+    daisyui,
   ],
-}
+};
