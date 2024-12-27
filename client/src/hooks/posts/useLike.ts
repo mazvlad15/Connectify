@@ -18,7 +18,6 @@ const useLike = (postId: string): likeReturn => {
   const socket = socketContext((state) => state.socket);
 
   useEffect(() => {
-    // Găsește postarea curentă
     const post = posts.find((post) => post._id === postId);
     if (post) {
       setLike(post.likes.includes(authState?._id || ""));
@@ -33,7 +32,7 @@ const useLike = (postId: string): likeReturn => {
 
     const handleUnlikePost = (data: { postId: string }) => {
       if (data.postId === postId) {
-        setLikes((prevLikes) => Math.max(prevLikes - 1, 0)); // Evită scăderea sub 0
+        setLikes((prevLikes) => Math.max(prevLikes - 1, 0)); 
       }
     };
 

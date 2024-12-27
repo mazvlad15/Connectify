@@ -31,9 +31,9 @@ const Post = ({ post }: PostProps) => {
 
   const { setLikeFunction, like, likes } = useLike(post._id || "");
 
-  const setLikeBtn = async (postId: string | undefined) => {
+  const setLikeBtn = async () => {
     try {
-      await setLikeFunction(postId || "");
+      await setLikeFunction();
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +90,7 @@ const Post = ({ post }: PostProps) => {
               like ? "liked" : ""
             }`}
             size={"25px"}
-            onClick={() => setLikeBtn(post._id || "")}
+            onClick={() => setLikeBtn()}
           />
         ) : (
           <FaRegHeart
@@ -98,7 +98,7 @@ const Post = ({ post }: PostProps) => {
               like ? "liked" : ""
             }`}
             size={"25px"}
-            onClick={() => setLikeBtn(post._id || "")}
+            onClick={() => setLikeBtn()}
           />
         )}
         <div className="tw-text-lg">{likes}</div>
