@@ -77,7 +77,7 @@ export const like = async (req, res) => {
 
     res.status(200).json({ message: "Liked post successfully" });
 
-    io.emit("likePost");
+    io.emit(`likePost:${postId}`, { postId });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error like" });
   }
@@ -103,7 +103,7 @@ export const unlike = async (req, res) => {
 
     res.status(200).json({ message: "Unliked post successfully" });
 
-    io.emit("unlikePost");
+    io.emit(`unlikePost:${postId}`, { postId });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error unlike" });
   }
@@ -226,7 +226,7 @@ export const deleteComment = async (req, res) => {
 
     res.status(200).json({ message: "Comment deleted successfully" });
 
-    io.emit("deleteComment", {commentId});
+    io.emit("deleteComment", { commentId });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error delete comment" });
   }

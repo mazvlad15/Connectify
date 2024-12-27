@@ -5,7 +5,7 @@ import authContext from "../../context/authContext";
 import { socketContext } from "../../context/socketContext";
 
 interface likeReturn {
-  setLikeFunction: (postId: string) => Promise<void>;
+  setLikeFunction: () => Promise<void>;
   like: boolean;
   likes: number;
 }
@@ -18,30 +18,35 @@ const useLike = (postId: string): likeReturn => {
   const socket = socketContext((state) => state.socket);
 
   useEffect(() => {
+    // Găsește postarea curentă
     const post = posts.find((post) => post._id === postId);
     if (post) {
       setLike(post.likes.includes(authState?._id || ""));
       setLikes(post.likes.length);
     }
 
-    const handleLikePost = () => {
-      setLikes((prevLikes) => prevLikes + 1);
+    const handleLikePost = (data: { postId: string }) => {
+      if (data.postId === postId) {
+        setLikes((prevLikes) => prevLikes + 1);
+      }
     };
 
-    const handleUnlikePost = () => {
-      setLikes((prevLikes) => prevLikes - 1);
+    const handleUnlikePost = (data: { postId: string }) => {
+      if (data.postId === postId) {
+        setLikes((prevLikes) => Math.max(prevLikes - 1, 0)); // Evită scăderea sub 0
+      }
     };
 
-    socket?.on("likePost", handleLikePost);
-    socket?.on("unlikePost", handleUnlikePost);
+    socket?.on(`likePost:${postId}`, handleLikePost);
+    socket?.on(`unlikePost:${postId}`, handleUnlikePost);
 
     return () => {
-      socket?.off("likePost", handleLikePost);
-      socket?.off("unlikePost", handleUnlikePost);
+      socket?.off(`likePost:${postId}`, handleLikePost);
+      socket?.off(`unlikePost:${postId}`, handleUnlikePost);
     };
   }, [posts, postId, socket, authState]);
 
-  const setLikeFunction = async (postId: string): Promise<void> => {
+  const setLikeFunction = async (): Promise<void> => {
     try {
       if (like) {
         const response: AxiosResponse = await axios.post("/api/posts/unlike", {
@@ -49,7 +54,6 @@ const useLike = (postId: string): likeReturn => {
         });
         if (response.data.message) {
           setLike(false);
-          setLikes((prevLikes) => prevLikes - 1);
         }
       } else {
         const response: AxiosResponse = await axios.post("/api/posts/like", {
@@ -57,7 +61,6 @@ const useLike = (postId: string): likeReturn => {
         });
         if (response.data.message) {
           setLike(true);
-          setLikes((prevLikes) => prevLikes + 1);
         }
       }
     } catch (error) {
